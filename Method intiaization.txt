@@ -1,0 +1,96 @@
+Method intiaization
+
+
+class Student
+{
+    String name;
+    int rollno;
+    float per;
+    void initialize(String n,int r,float p)
+    {
+        name=n;
+        rollno=r;
+        per=p;
+    }
+    void display()
+    {
+        System.out.println("my name is "+name);
+        System.out.println("my rollno is"+rollno);
+        System.out.println("my percentage"+per);
+        }
+}
+class Studentdemo
+{
+    public static void main(String args[])
+    {
+        Student s1=new Student();
+        Student s2=new Student();
+        Student s3=new Student();
+        s1.initialize("deepthi",10,98.f);
+        s2.initialize("puji",20,99.9f);
+        s3.initialize("nasa",30,99.7f);
+        s1.display();
+        s2.display();
+        s3.display();
+}
+}
+
+
+INTER THREAD COMMINICATION
+
+
+
+class Communication
+{
+    public static void main(String args[])
+    {
+        producer p=new producer();
+        consumer c=new consumer(p);
+        Thread t1=new Thread(p);
+        Thread t2=new Thread(c);
+        t2.start();
+        t1.start();
+    }
+}
+class producer extends Thread
+{
+    StringBuffer sb;
+    producer()
+    {
+        sb=new StringBuffer();
+    }
+    public void run()
+    {
+        synchronized(sb)
+        {
+            for(int i=1;i<=10;i++)
+            {
+                try
+                {
+                    sb.append(i+"");
+                    Thread.sleep(1000);
+                    System.out.println("appending");
+                }
+                catch(InterruptedException e){}
+            }
+            sb.notify();
+        }
+    }
+}
+class consumer extends Thread
+{
+    producer prod;
+    consumer(producer prod)
+    {
+        this.prod=prod;
+    }
+    public void run()
+    {
+        try
+        {
+            prod.sb.wait();
+        }
+        catch(InterruptedException e){}
+        System.out.println(prod.sb);
+    }
+}
